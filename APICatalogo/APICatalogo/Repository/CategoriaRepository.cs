@@ -9,14 +9,14 @@ public class CategoriaRepository : Repository<Categoria>, ICategoriaRepository
 {
     public CategoriaRepository(AppDbContext _context) : base(_context) { }
 
-    public IEnumerable<Categoria> GetCategoriasProdutos()
+    public async Task<IEnumerable<Categoria>> GetCategoriasProdutos()
     {
-        return Get().Include(x => x.Produtos);
+        return await Get().Include(x => x.Produtos).ToListAsync();
     }
 
-    public PagedList<Categoria> GetCategorias(CategoriasParameters categoriasParameters)
+    public async Task<PagedList<Categoria>> GetCategorias(CategoriasParameters categoriasParameters)
     {
-        return PagedList<Categoria>.ToPagedList(Get().OrderBy(c => c.Nome)
+        return await PagedList<Categoria>.ToPagedList(Get().OrderBy(c => c.Nome)
                                               , categoriasParameters.PageNumber
                                               , categoriasParameters.PageSize);
     }

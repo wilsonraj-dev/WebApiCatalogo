@@ -22,9 +22,9 @@ public class CategoriasController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<CategoriaDTO>> Get([FromQuery] CategoriasParameters categoriasParameters)
+    public async Task<ActionResult<IEnumerable<CategoriaDTO>>> Get([FromQuery] CategoriasParameters categoriasParameters)
     {
-        var categorias = _uof.CategoriaRepository.GetCategorias(categoriasParameters);
+        var categorias = await _uof.CategoriaRepository.GetCategorias(categoriasParameters);
 
         var metaData = new
         {
@@ -44,18 +44,18 @@ public class CategoriasController : ControllerBase
     }
 
     [HttpGet("produtos")]
-    public ActionResult<IEnumerable<CategoriaDTO>> GetCategoriasProdutos()
+    public async Task<ActionResult<IEnumerable<CategoriaDTO>>> GetCategoriasProdutos()
     {
-        var categorias = _uof.CategoriaRepository.GetCategoriasProdutos().ToList();
+        var categorias = await _uof.CategoriaRepository.GetCategoriasProdutos();
         var categoriasDTO = _mapper.Map<List<CategoriaDTO>>(categorias);
 
         return categoriasDTO;
     }
 
     [HttpGet("{id:int}", Name = "ObterCategoria")]
-    public ActionResult<CategoriaDTO> GetCategoria(int id)
+    public async Task<ActionResult<CategoriaDTO>> GetCategoria(int id)
     {
-        var categoria = _uof.CategoriaRepository.GetById(x => x.CategoriaId == id);
+        var categoria = await _uof.CategoriaRepository.GetById(x => x.CategoriaId == id);
 
         if (categoria is null)
         {
@@ -68,7 +68,7 @@ public class CategoriasController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult Post(CategoriaDTO categoriaDto)
+    public async Task<ActionResult> Post(CategoriaDTO categoriaDto)
     {
         var categoria = _mapper.Map<Categoria>(categoriaDto);
 
@@ -76,7 +76,7 @@ public class CategoriasController : ControllerBase
             return BadRequest("Informações inválidas inseridas para a categoria!");
 
         _uof.CategoriaRepository.Add(categoria);
-        _uof.Commit();
+        await _uof.Commit();
 
         var categoriaDTO = _mapper.Map<CategoriaDTO>(categoria);
         return new CreatedAtRouteResult("ObterCategoria",
@@ -84,7 +84,7 @@ public class CategoriasController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    public ActionResult Put(int id, CategoriaDTO categoriaDto)
+    public async Task<ActionResult> Put(int id, CategoriaDTO categoriaDto)
     {
         if (id != categoriaDto.CategoriaId)
         {
@@ -93,15 +93,15 @@ public class CategoriasController : ControllerBase
 
         var categoria = _mapper.Map<Categoria>(categoriaDto);
         _uof.CategoriaRepository.Update(categoria);
-        _uof.Commit();
+        await _uof.Commit();
 
         return Ok(categoria);
     }
 
     [HttpDelete("{id:int}")]
-    public ActionResult<CategoriaDTO> Delete(int id)
+    public async Task<ActionResult<CategoriaDTO>> Delete(int id)
     {
-        var categoria = _uof.CategoriaRepository.GetById(x => x.CategoriaId == id);
+        var categoria = await _uof.CategoriaRepository.GetById(x => x.CategoriaId == id);
 
         if (categoria is null)
         {
@@ -109,7 +109,7 @@ public class CategoriasController : ControllerBase
         }
 
         _uof.CategoriaRepository.Delete(categoria);
-        _uof.Commit();
+        await _uof.Commit();
 
         var categoriaDTO = _mapper.Map<CategoriaDTO>(categoria);
 
