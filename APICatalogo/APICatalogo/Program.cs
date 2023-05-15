@@ -13,7 +13,6 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers().AddJsonOptions(x =>
     x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
@@ -86,6 +85,14 @@ var mappingConfig = new MapperConfiguration(mc =>
 IMapper mapper = mappingConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
+builder.Services.AddCors(op =>
+{
+    op.AddPolicy("PermitirApiRequest",
+        builder =>
+        builder.WithOrigins("https://www.apirequest.io")
+                    .WithMethods("GET"));
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -99,6 +106,9 @@ app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseCors();
+
 app.MapControllers();
 
 app.Run();

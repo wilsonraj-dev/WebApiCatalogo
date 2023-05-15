@@ -5,6 +5,7 @@ using APICatalogo.Repository;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -47,6 +48,7 @@ public class CategoriasController : ControllerBase
     }
 
     [HttpGet("produtos")]
+    [EnableCors("PermitirApiRequest")]
     public async Task<ActionResult<IEnumerable<CategoriaDTO>>> GetCategoriasProdutos()
     {
         var categorias = await _uof.CategoriaRepository.GetCategoriasProdutos();
@@ -56,6 +58,7 @@ public class CategoriasController : ControllerBase
     }
 
     [HttpGet("{id:int}", Name = "ObterCategoria")]
+    [EnableCors("PermitirApiRequest")]
     public async Task<ActionResult<CategoriaDTO>> GetCategoria(int id)
     {
         var categoria = await _uof.CategoriaRepository.GetById(x => x.CategoriaId == id);
