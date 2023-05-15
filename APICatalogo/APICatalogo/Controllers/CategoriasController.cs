@@ -1,5 +1,6 @@
 ﻿using APICatalogo.Context;
 using APICatalogo.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,12 +31,14 @@ namespace APICatalogo.Controllers
         }
 
         [HttpGet("produtos")]
+        [EnableCors("PermitirApiRequest")]
         public ActionResult<IEnumerable<Categoria>> GetCategoriasProdutos()
         {
             return _context.Categorias.AsNoTracking().Include(x => x.Produtos).ToList();
         }
 
         [HttpGet("{id:int}", Name = "ObterCategoria")]
+        [EnableCors("PermitirApiRequest")]
         public ActionResult<Categoria> GetCategoria(int id)
         {
             var categoria = _context.Categorias.AsNoTracking().FirstOrDefault(x => x.CategoriaId == id);

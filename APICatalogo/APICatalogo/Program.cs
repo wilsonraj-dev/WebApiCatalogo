@@ -5,7 +5,6 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers().AddJsonOptions(x =>
     x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
@@ -19,6 +18,14 @@ builder.Services.AddDbContext<AppDbContext>(options =>
                  options.UseMySql(mySqlConnection,
                  ServerVersion.AutoDetect(mySqlConnection)));
 
+builder.Services.AddCors(op =>
+{
+    op.AddPolicy("PermitirApiRequest",
+        builder =>
+        builder.WithOrigins("https://www.apirequest.io")
+                    .WithMethods("GET"));
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -31,6 +38,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseCors();
 
 app.MapControllers();
 
