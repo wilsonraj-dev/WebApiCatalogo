@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 
 namespace APICatalogo.Controllers;
 
+[Produces("application/json")]
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [Route("[controller]")]
 [ApiController]
