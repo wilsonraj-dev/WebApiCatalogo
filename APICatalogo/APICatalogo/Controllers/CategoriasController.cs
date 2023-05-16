@@ -92,7 +92,6 @@ public class CategoriasController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    //[ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Put))]
     public async Task<ActionResult> Put(int id, CategoriaDTO categoriaDto)
     {
         if (id != categoriaDto.CategoriaId)
