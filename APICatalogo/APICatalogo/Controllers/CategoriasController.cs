@@ -11,6 +11,8 @@ using Newtonsoft.Json;
 
 namespace APICatalogo.Controllers;
 
+[ApiConventionType(typeof(DefaultApiConventions))]
+[Produces("application/json")]
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [Route("[controller]")]
 [ApiController]
@@ -90,6 +92,7 @@ public class CategoriasController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    //[ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Put))]
     public async Task<ActionResult> Put(int id, CategoriaDTO categoriaDto)
     {
         if (id != categoriaDto.CategoriaId)
